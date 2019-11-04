@@ -1,0 +1,120 @@
+<div class="row">
+    <div class="search col">
+        <form [formGroup]="contactForm" #formDirective="ngForm" name="contactForm" (ngSubmit)="onSubmit(formDirective)"
+            novalidate>
+            <input type="hidden" formControlName="_id">
+            <div class="form-group">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Name :</mat-label>
+                    <input matInput id="txtName" formControlName="name" placeholder="Name" required maxlength="20">
+                    <mat-error *ngIf="contactForm.get('name').errors?.required">
+                        Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="example-full-width">
+                    <mat-label>SurName : </mat-label>
+                    <input matInput id="txtSurName" formControlName="surname" placeholder="surName" required
+                        maxlength="20">
+                    <mat-error *ngIf="contactForm.get('surname').errors?.required">
+                        SurName is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="example-full-width">
+                    <mat-label> Number : </mat-label>
+                    <input matInput id="txtNumber" formControlName="number" placeholder="xxx-xxxx-xxxx" required
+                        maxlength="13">
+                    <mat-error *ngIf="contactForm.get('number').errors?.required">
+                        xxx-xxxx-xxxx
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Birth Day :</mat-label>
+                    <input matInput formControlName="birthday" [matDatepicker]="startpicker" name="birthday"
+                        placeholder="Birthday" required>
+                    <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startpicker></mat-datepicker>
+                    <mat-error *ngIf="contactForm.get('birthday').errors">
+                        mm/dd/yyyy
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Address :</mat-label>
+                    <input matInput id="txtAddress" formControlName="address" placeholder="Address" required
+                        maxlength="50">
+                    <mat-error *ngIf="contactForm.get('address').errors?.required">
+                        Address is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <button mat-raised-button class="submit" type="submit" color="primary"
+                [disabled]="!contactForm.valid">Submit</button>
+
+        </form>
+        <div class="row">
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput type="text" [formControl]="nameFilter" placeholder="Filter by name">
+                </mat-form-field>
+            </div>
+
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput type="text" [formControl]="surnameFilter" placeholder="Filter by surname">
+                </mat-form-field>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<ng-container *ngIf="dataSource?.data?.length > 0">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="columnNames"> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="surname">
+            <th mat-header-cell *matHeaderCellDef class="columnNames"> SurName </th>
+            <td mat-cell *matCellDef="let element"> {{element.surname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef class="columnNames"> Number </th>
+            <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="birthDay">
+            <th mat-header-cell *matHeaderCellDef class="columnNames"> BirthDay </th>
+            <td mat-cell *matCellDef="let element"> {{element.birthday | date: 'EEE MM-dd-yyyy' }} </td> 
+        </ng-container>
+        <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef class="columnNames"> Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <div>
+                    <button mat-icon-button  (click)='onEdit(element)'>
+                        <mat-icon color="primary" aria-label="Edit">edit</mat-icon>
+                    </button>
+                    <button mat-icon-button  (click)="deleteContact(element._id)">
+                        <mat-icon color="primary" aria-label="Delete">delete</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="row.color"></tr>
+    </table>
+</ng-container>
